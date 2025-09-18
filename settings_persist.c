@@ -2,8 +2,8 @@
  * @file settings_persist.c
  * @author 刘通达
  * @brief 本文件实现 settings_persist 模块的基本功能
- * @version 0.1
- * @date 2025-09-15 14:04:33
+ * @version 0.1.1
+ * @date 2025-09-18 13:44:33
  *
  * @copyright Copyright (c) 2025
  *
@@ -37,8 +37,13 @@
 #endif
 
 /* 线程中while(1)每次休眠的时间(单位ms) */
-#define TLV3_THREAD_LOOP_SLEEP_MS (200)
-
+#define SETTINGS_PERSIST_THREAD_LOOP_SLEEP_MS (200)
+/* 静态断言检查 */
+_Static_assert(
+        (SETTINGS_PERSIST_THREAD_LOOP_SLEEP_MS * 1000ULL) <= UINT32_MAX,
+        "SETTINGS_PERSIST_THREAD_LOOP_SLEEP_MS is too large, exceeds usleep's parameter range");
+_Static_assert(SETTINGS_PERSIST_THREAD_LOOP_SLEEP_MS >= 200,
+        "SETTINGS_PERSIST_THREAD_LOOP_SLEEP_MS is too small, it may cause CPU waste");
 extern int settings_ini_handler(void *user, const char *section, const char *name,
                                 const char *value);
 
@@ -248,7 +253,7 @@ static void *work_thread_func(void *arg)
     while (settings_persist_thread_running)
     {
         /* 线程循环间隔 */
-        usleep(TLV3_THREAD_LOOP_SLEEP_MS * 1000);
+        usleep(SETTINGS_PERSIST_THREAD_LOOP_SLEEP_MS * 1000);
 
         pthread_mutex_lock(&cache_mutex);
         /*
