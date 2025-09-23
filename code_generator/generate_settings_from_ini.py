@@ -627,6 +627,7 @@ def generate_settings_persist_header(settings):
     code += "int settings_persist_init(void);\n\n"
     code += "int settings_persist_get_data(Settings *settings);\n\n"
     code += "int settings_persist_set_data(const Settings *settings);\n\n"
+    code += "int settings_persist_reset_all_data(void);\n\n"
 
     # 生成setter函数声明
     for section, items in sections.items():
@@ -779,7 +780,29 @@ extern pthread_mutex_t cache_mutex;
             func_code += "}"
 
             # 添加到总代码中
-            code += func_code + "\n\n"
+            code += func_code + "\n"
+
+    code += """
+int settings_persist_reset_all_data(void)
+{
+    SETTINGS_PERSIST_SET_FUNC_LOG_TAG("settings_persist_reset_all_data");
+    pthread_mutex_lock(&settings_persist_thread_status_mutex);
+    if (settings_persist_thread_running == 0)
+    {
+        SETTINGS_PERSIST_LOG_WARN("数据重置失败: settings_persist模块未初始化");
+        pthread_mutex_unlock(&settings_persist_thread_status_mutex);
+        return -2;
+    }
+
+    pthread_mutex_lock(&cache_mutex);
+    settings_restore_defaults(&settings_cache);
+    pthread_mutex_unlock(&cache_mutex);
+    SETTINGS_PERSIST_LOG_DEBUG("数据重置成功");
+    pthread_mutex_unlock(&settings_persist_thread_status_mutex);
+    return 0;
+}
+
+"""
 
     return code
 
@@ -1063,7 +1086,7 @@ int write_settings_to_file(const char* filename, const Settings* settings) {
 
 
 def main():
-    settings = parse_settings_ini("./settings(for_code_generator).ini")
+    settings = parse_settings_ini("./code_generator/settings(for_code_generator).ini")
 
     # 调试：打印解析结果
     print("\nParsed settings:")
