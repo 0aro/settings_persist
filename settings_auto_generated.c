@@ -20,7 +20,7 @@
 #define SETTINGS_PERSIST_MODULE_TAG "settings_persist"
 #include "settings_persist_log.h"
 
-extern volatile int settings_persist_thread_running;
+extern int settings_persist_thread_running;
 extern pthread_mutex_t settings_persist_thread_status_mutex;
 extern Settings settings_cache;
 extern pthread_mutex_t cache_mutex;

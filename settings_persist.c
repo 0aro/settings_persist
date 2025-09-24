@@ -2,8 +2,8 @@
  * @file settings_persist.c
  * @author 刘通达
  * @brief 本文件实现 settings_persist 模块的基本功能
- * @version 0.1.1
- * @date 2025-09-18 13:44:33
+ * @version 0.1.2
+ * @date 2025-09-24 14:05:53
  *
  * @copyright Copyright (c) 2025
  *
@@ -52,7 +52,7 @@ extern void settings_restore_defaults(Settings *settings);
 extern int write_settings_to_file(const char *filename, const Settings *settings);
 
 /* 线程运行标志位 */
-volatile int settings_persist_thread_running = 0;
+int settings_persist_thread_running = 0;
 /* 对 settings_persist_thread_running 的访问和修改都要通过锁来进行 */
 pthread_mutex_t settings_persist_thread_status_mutex = PTHREAD_MUTEX_INITIALIZER;
 /* 线程句柄 */
@@ -250,8 +250,16 @@ static void *work_thread_func(void *arg)
     bool cache_changed = false;      /* 缓存是否发生变化的标记 */
     uint32_t change_cycle_count = 0; /* 变化后的循环计数 */
 
-    while (settings_persist_thread_running)
+    while (1)
     {
+        /* 关键修改：通过锁保护标志位的读取 */
+        pthread_mutex_lock(&settings_persist_thread_status_mutex);
+        int running = settings_persist_thread_running;
+        pthread_mutex_unlock(&settings_persist_thread_status_mutex);
+        if (!running)
+        {
+            break;
+        }
         /* 线程循环间隔 */
         usleep(SETTINGS_PERSIST_THREAD_LOOP_SLEEP_MS * 1000);
 

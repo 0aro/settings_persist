@@ -658,7 +658,7 @@ def generate_settings_persist_header(settings):
 def generate_settings_set_functions(settings):
     """生成所有配置项的setter函数代码"""
     code = """
-extern volatile int settings_persist_thread_running;
+extern int settings_persist_thread_running;
 extern pthread_mutex_t settings_persist_thread_status_mutex;
 extern Settings settings_cache;
 extern pthread_mutex_t cache_mutex;
