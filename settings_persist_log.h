@@ -89,7 +89,7 @@
 #define SETTINGS_PERSIST_LOG_DEBUG(format, ...)                                                    \
     do                                                                                             \
     {                                                                                              \
-        printf("[SETTINGS_PERSIST_D][%s][%s] " format "\n", SETTINGS_PERSIST_MODULE_TAG,           \
+        printf("[SETTINGS_PERSIST][D][%s][%s] " format "\n", SETTINGS_PERSIST_MODULE_TAG,           \
                __log_current_func_tag, ##__VA_ARGS__);                                             \
     } while (0)
 #else
@@ -103,7 +103,7 @@
 #define SETTINGS_PERSIST_LOG_INFO(format, ...)                                                     \
     do                                                                                             \
     {                                                                                              \
-        printf("[SETTINGS_PERSIST_I][%s][%s] " format "\n", SETTINGS_PERSIST_MODULE_TAG,           \
+        printf("[SETTINGS_PERSIST][I][%s][%s] " format "\n", SETTINGS_PERSIST_MODULE_TAG,           \
                __log_current_func_tag, ##__VA_ARGS__);                                             \
     } while (0)
 #else
@@ -117,7 +117,7 @@
 #define SETTINGS_PERSIST_LOG_WARN(format, ...)                                                     \
     do                                                                                             \
     {                                                                                              \
-        printf("[SETTINGS_PERSIST_W][%s][%s] " format "\n", SETTINGS_PERSIST_MODULE_TAG,           \
+        printf("[SETTINGS_PERSIST][W][%s][%s] " format "\n", SETTINGS_PERSIST_MODULE_TAG,           \
                __log_current_func_tag, ##__VA_ARGS__);                                             \
     } while (0)
 #else
@@ -131,7 +131,7 @@
 #define SETTINGS_PERSIST_LOG_ERROR(format, ...)                                                    \
     do                                                                                             \
     {                                                                                              \
-        printf("\n[SETTINGS_PERSIST_E][%s][%s] " format "\n\n", SETTINGS_PERSIST_MODULE_TAG,       \
+        printf("\n[SETTINGS_PERSIST][E][%s][%s] " format "\n\n", SETTINGS_PERSIST_MODULE_TAG,       \
                __log_current_func_tag, ##__VA_ARGS__);                                             \
     } while (0)
 #else
