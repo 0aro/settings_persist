@@ -892,7 +892,7 @@ int settings_ini_handler(void* user, const char* section, const char* name, cons
         else:
             code += f"        /* Unsupported type: {data_type} */\n"
 
-        code += "        return 0;\n"
+        code += "        return 1;\n"
         code += "    }\n\n"
 
     code += "    /* 未知的 section 或 name - 已忽略 */\n"
